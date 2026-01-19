@@ -49,3 +49,24 @@ console.log(countTruthy([0, 1, "", "a", null, [], {}, false, true])); // 5
 console.log(countTruthy([]));                                         // 0
 console.log(countTruthy([false, 0, "", null, undefined, NaN]));        // 0
 console.log(countTruthy("no soy array"));   
+
+/*  *//*  *//*  *//*  *//*  *//*  *//*  *//*  *//*  *//*  *//*  *//*  *//*  *//*  *//*  *//*  *//*  */
+
+const contarVerdaderos = (array) => {
+  if (!Array.isArray(array)) {
+    return 0
+  }
+
+  let contador = 0
+
+  for (const valor of array) {
+    if (valor) 
+    {
+      contador++
+    }
+  }
+
+  return contador;
+}
+
+console.log(contarVerdaderos([0, 1, "", "a", null, [], {}, false, true])); // 5
