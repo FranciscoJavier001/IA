@@ -26,7 +26,7 @@ console.log(countTruthy("no soy array"));                               // 0
 
 function countTruthy(arr) { /* Definimos una funcion que reciba un parametro */
   // 1. Validación: si NO es arreglo, termina la función
-  if (!Array.isArray(arr)) { /* Validamos su no es arreglo, solo 1 o 0, si es diferente la variable, del metodo, del arreglo */
+  if (!Array.isArray(arr)) { /* Validamos si no es arreglo, solo 1 o 0, si es diferente la variable, del metodo, del arreglo recibido */
     return 0; /* No me retornes nada, la funcion continua */
   }
 
@@ -35,7 +35,7 @@ function countTruthy(arr) { /* Definimos una funcion que reciba un parametro */
 
   // 3. Recorremos el arreglo
   for (const value of arr) { /* Cada uno, de la constante valor del array */
-    // 4. Si el valor es truthy, incr ementamos
+    // 4. Si el valor es truthy, incrementamos
     if (value) { /* Si el valor existe sumalo */
       count++;
     }
@@ -52,7 +52,7 @@ console.log(countTruthy("no soy array"));
 
 /*  *//*  *//*  *//*  *//*  *//*  *//*  *//*  *//*  *//*  *//*  *//*  *//*  *//*  *//*  *//*  *//*  */
 
-const contarVerdaderos = (array) => {
+const contarVerdaderos = (array) => { /* Funcion que va a contar los verdaderos que se reciben */
   if (!Array.isArray(array)) {
     return 0
   }
