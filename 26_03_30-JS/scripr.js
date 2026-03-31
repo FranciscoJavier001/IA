@@ -4,7 +4,7 @@
 
 // Este arreglo simula los registros de un hábito.
 // Cada elemento representa el estado de un día.
-const registros = [
+const registros = [ /* Aqui ya le meti los resultados, es decir aqui ya lo defini */
   "verde",
   "verde",
   "amarillo",
