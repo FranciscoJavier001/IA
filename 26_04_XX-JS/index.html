@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Cajero — Algoritmo Greedy</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="container">
+    <h1>Cajero — Algoritmo Greedy</h1>
+    <p class="subtitle">Ejercicio de lógica y algoritmos · JS</p>
+
+    <div class="card">
+      <h2>Monto a retirar</h2>
+      <div class="input-row">
+        <span class="prefix">$</span>
+        <input type="number" id="monto" value="880" step="10" min="10" />
+      </div>
+      <button onclick="calcular()">Calcular billetes</button>
+    </div>
+
+    <div class="card" id="resultado" style="display:none;">
+      <h2>Resultado</h2>
+      <div class="billetes-grid" id="grid"></div>
+      <div class="resumen">
+        <span id="res-texto"></span>
+        <span id="res-total"></span>
+      </div>
+    </div>
+
+    <div class="card" id="error-card" style="display:none;">
+      <p class="error" id="error-msg"></p>
+    </div>
+
+  </div>
+
+  <script src="script0.js"></script>
+</body>
+</html>
