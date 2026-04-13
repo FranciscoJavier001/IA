@@ -43,6 +43,8 @@ function retirarDinero(monto) {
   /* Regresamos el objeto con todos los billetes y sus cantidades */
 }
 
+
+/* Es donde aterrizan los inputs en el FrontEnd y Logica BackEnd*/
 function calcular() {
   const monto = parseInt(document.getElementById('monto').value);
   const resCard = document.getElementById('resultado');
