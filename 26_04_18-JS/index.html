@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>El Número Perdido</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <div class="bg-grid"></div>
+
+  <main class="container">
+    <header>
+      <span class="tag">Ejercicio #2</span>
+      <h1>El Número<br/><em>Perdido</em></h1>
+      <p class="subtitle">Ingresa una lista de números separados por coma.<br/>El algoritmo encontrará el que falta.</p>
+    </header>
+
+    <section class="card input-card">
+      <label for="inputArray">🔢 Lista de números</label>
+      <div class="input-row">
+        <input
+          type="text"
+          id="inputArray"
+          placeholder="Ej: 3, 7, 1, 2, 8, 4, 5"
+          autocomplete="off"
+        />
+        <button id="btnResolver" onclick="resolver()">Resolver</button>
+      </div>
+      <div class="ejemplos">
+        <span>Ejemplos rápidos:</span>
+        <button class="chip" onclick="cargarEjemplo('3, 7, 1, 2, 8, 4, 5')">Falta el 6</button>
+        <button class="chip" onclick="cargarEjemplo('1, 2, 4, 5, 6')">Falta el 3</button>
+        <button class="chip" onclick="cargarEjemplo('2, 3, 4, 5, 6, 7, 8, 9, 10')">Falta el 1</button>
+      </div>
+    </section>
+
+    <section class="card result-card" id="resultCard">
+      <div class="result-inner">
+        <div class="step" id="stepN">
+          <span class="step-label">Paso 1 — n</span>
+          <span class="step-value" id="valN">—</span>
+        </div>
+        <div class="divider">→</div>
+        <div class="step" id="stepEsperada">
+          <span class="step-label">Paso 2 — Suma esperada</span>
+          <span class="step-value" id="valEsperada">—</span>
+        </div>
+        <div class="divider">→</div>
+        <div class="step" id="stepReal">
+          <span class="step-label">Paso 3 — Suma real</span>
+          <span class="step-value" id="valReal">—</span>
+        </div>
+      </div>
+
+      <div class="answer" id="answer">
+        <span class="answer-label">Número perdido</span>
+        <span class="answer-number" id="answerNum">?</span>
+      </div>
+
+      <div class="formula-box" id="formulaBox">
+        <code id="formulaText"></code>
+      </div>
+    </section>
+
+    <section class="card code-card">
+      <div class="code-header">
+        <span class="dot red"></span>
+        <span class="dot yellow"></span>
+        <span class="dot green"></span>
+        <span class="code-title">script.js</span>
+      </div>
+      <pre><code id="codeBlock">function numerosPerdido(arr) {
+  const n = arr.length + 1;
+  const sumaEsperada = (n * (n + 1)) / 2;
+  let sumaReal = 0;
+  for (let num of arr) {
+    sumaReal += num;
+  }
+  return sumaEsperada - sumaReal;
+}</code></pre>
+    </section>
+
+    <div id="errorMsg" class="error-msg"></div>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
