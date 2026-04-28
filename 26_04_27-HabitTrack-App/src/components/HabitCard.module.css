@@ -1,0 +1,168 @@
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 14px 16px;
+  transition: border-color 0.25s;
+  animation: slideIn 0.25s ease;
+}
+
+.card.active {
+  border-color: var(--accent);
+  background: var(--surface2);
+}
+
+.top {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.info {
+  flex: 1;
+  min-width: 0;
+}
+
+.name {
+  font-size: 15px;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.meta {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--muted);
+  margin-top: 2px;
+}
+
+.active .meta {
+  color: var(--accent);
+}
+
+.timerDisplay {
+  font-family: var(--font-mono);
+  font-size: 18px;
+  font-weight: 500;
+  letter-spacing: 1px;
+  min-width: 72px;
+  text-align: right;
+  color: var(--muted);
+  transition: color 0.2s;
+}
+
+.active .timerDisplay {
+  color: var(--accent);
+}
+
+.timerBtn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1.5px solid var(--border);
+  background: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: border-color 0.2s, background 0.2s, transform 0.1s;
+}
+
+.timerBtn:hover {
+  border-color: var(--accent);
+  background: var(--accent-dim);
+}
+
+.timerBtn:active {
+  transform: scale(0.93);
+}
+
+.active .timerBtn {
+  border-color: var(--accent);
+  background: var(--accent-dim);
+}
+
+.timerBtn svg {
+  fill: var(--text);
+  transition: fill 0.2s;
+}
+
+.active .timerBtn svg {
+  fill: var(--accent);
+}
+
+.deleteBtn {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--muted);
+  font-size: 14px;
+  transition: color 0.2s, background 0.2s;
+  flex-shrink: 0;
+}
+
+.deleteBtn:hover {
+  color: var(--danger);
+  background: rgba(255, 92, 92, 0.1);
+}
+
+/* Footer bar */
+.footer {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.totalLabel {
+  font-size: 11px;
+  color: var(--muted);
+  letter-spacing: 0.4px;
+  white-space: nowrap;
+}
+
+.barTrack {
+  flex: 1;
+  height: 3px;
+  background: var(--border);
+  border-radius: 2px;
+  margin: 0 10px;
+  overflow: hidden;
+}
+
+.barFill {
+  height: 100%;
+  background: var(--accent);
+  border-radius: 2px;
+  transition: width 0.4s ease;
+  min-width: 4px;
+}
+
+.totalValue {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text);
+  white-space: nowrap;
+}
+
+/* Pulse dot */
+.pulseDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+  animation: pulse 1.4s ease-in-out infinite;
+  flex-shrink: 0;
+}
