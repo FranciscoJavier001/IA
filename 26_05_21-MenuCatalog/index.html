@@ -1,0 +1,1589 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Menu Catalog — Referencia de Menús</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0d0d0f;
+      --bg2: #161618;
+      --bg3: #1e1e21;
+      --border: #2a2a2e;
+      --border2: #3a3a3f;
+      --text: #e8e8ec;
+      --muted: #8888a0;
+      --accent: #a259ff;
+      --accent2: #ff6b6b;
+      --accent3: #00e5b0;
+      --mono: 'DM Mono', monospace;
+      --sans: 'Syne', sans-serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ─── NOISE TEXTURE ─── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 9999;
+      opacity: 0.4;
+    }
+
+    /* ════════════════════════════════════════
+       TOP NAVBAR
+    ════════════════════════════════════════ */
+    .topnav {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background: rgba(13,13,15,0.85);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      padding: 0 2rem;
+      height: 60px;
+      gap: 2rem;
+    }
+
+    .topnav .logo {
+      font-weight: 800;
+      font-size: 15px;
+      letter-spacing: -0.02em;
+      color: var(--text);
+      white-space: nowrap;
+      margin-right: auto;
+    }
+    .topnav .logo span { color: var(--accent); }
+
+    /* NAV DROPDOWN CLASSIC */
+    .nav-item {
+      position: relative;
+    }
+    .nav-btn {
+      background: none;
+      border: none;
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 12px;
+      cursor: pointer;
+      padding: 6px 10px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      transition: color .2s, background .2s;
+      white-space: nowrap;
+    }
+    .nav-btn:hover { color: var(--text); background: var(--bg3); }
+    .nav-btn .chevron {
+      font-size: 10px;
+      transition: transform .2s;
+      display: inline-block;
+    }
+    .nav-item.open .chevron { transform: rotate(180deg); }
+
+    .nav-dropdown {
+      position: absolute;
+      top: calc(100% + 8px);
+      left: 0;
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      min-width: 160px;
+      padding: 6px;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(-6px);
+      transition: opacity .18s, transform .18s, visibility .18s;
+      z-index: 100;
+    }
+    .nav-item.open .nav-dropdown {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+    .nav-dropdown a {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 10px;
+      border-radius: 7px;
+      color: var(--muted);
+      text-decoration: none;
+      font-family: var(--mono);
+      font-size: 12px;
+      transition: color .15s, background .15s;
+    }
+    .nav-dropdown a:hover { color: var(--text); background: var(--bg3); }
+    .nav-dropdown a .opt-num { color: var(--accent); }
+
+    /* MEGA MENU */
+    .mega-dropdown {
+      position: absolute;
+      top: calc(100% + 8px);
+      left: -60px;
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      width: 420px;
+      padding: 16px;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(-6px);
+      transition: opacity .18s, transform .18s, visibility .18s;
+      z-index: 100;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+    .nav-item.open .mega-dropdown {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+    .mega-col-title {
+      grid-column: 1 / -1;
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--accent);
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      padding: 0 4px 8px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 4px;
+    }
+    .mega-item {
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px 12px;
+      cursor: pointer;
+      transition: border-color .15s, background .15s;
+    }
+    .mega-item:hover { border-color: var(--accent); background: rgba(162,89,255,.07); }
+    .mega-item .mi-num { font-family: var(--mono); font-size: 10px; color: var(--accent); }
+    .mega-item .mi-label { font-size: 13px; font-weight: 600; margin-top: 2px; }
+    .mega-item .mi-sub { font-family: var(--mono); font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+    /* HAMBURGER */
+    .hamburger-btn {
+      background: none;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      width: 36px;
+      height: 36px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      cursor: pointer;
+      transition: border-color .2s;
+    }
+    .hamburger-btn:hover { border-color: var(--accent); }
+    .hamburger-btn span {
+      display: block;
+      width: 16px;
+      height: 1.5px;
+      background: var(--text);
+      border-radius: 2px;
+      transition: transform .25s, opacity .25s;
+    }
+    .hamburger-btn.active span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+    .hamburger-btn.active span:nth-child(2) { opacity: 0; }
+    .hamburger-btn.active span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+
+    /* DRAWER */
+    .drawer-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.6);
+      z-index: 900;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity .25s, visibility .25s;
+    }
+    .drawer-overlay.open { opacity: 1; visibility: visible; }
+    .drawer {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 260px;
+      height: 100%;
+      background: var(--bg2);
+      border-right: 1px solid var(--border);
+      z-index: 910;
+      padding: 2rem 1.25rem;
+      transform: translateX(-100%);
+      transition: transform .28s cubic-bezier(.4,0,.2,1);
+    }
+    .drawer.open { transform: translateX(0); }
+    .drawer-title {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1.5rem;
+    }
+    .drawer a {
+      display: block;
+      padding: 10px 12px;
+      border-radius: 8px;
+      color: var(--muted);
+      text-decoration: none;
+      font-family: var(--mono);
+      font-size: 13px;
+      transition: color .15s, background .15s;
+      margin-bottom: 2px;
+    }
+    .drawer a .dn { color: var(--accent); margin-right: 8px; }
+    .drawer a:hover { color: var(--text); background: var(--bg3); }
+
+    /* ════════════════════════════════════════
+       MAIN LAYOUT
+    ════════════════════════════════════════ */
+    .hero {
+      padding: 5rem 2rem 3rem;
+      text-align: center;
+      border-bottom: 1px solid var(--border);
+    }
+    .hero-label {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--accent);
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+    .hero h1 {
+      font-size: clamp(2rem, 6vw, 4rem);
+      font-weight: 800;
+      line-height: 1.05;
+      letter-spacing: -.03em;
+    }
+    .hero h1 span { color: var(--accent); }
+    .hero p {
+      margin-top: 1rem;
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 13px;
+      max-width: 500px;
+      margin-inline: auto;
+      line-height: 1.7;
+    }
+
+    .catalog {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 3rem 2rem 6rem;
+      display: flex;
+      flex-direction: column;
+      gap: 3rem;
+    }
+
+    .section-card {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+    }
+    .section-header {
+      padding: 1.25rem 1.5rem;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: baseline;
+      gap: 12px;
+    }
+    .section-num {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--accent);
+      letter-spacing: .06em;
+    }
+    .section-title {
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: -.01em;
+    }
+    .section-tag {
+      margin-left: auto;
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--muted);
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      padding: 3px 8px;
+      border-radius: 99px;
+    }
+    .section-body {
+      padding: 2rem 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+    .section-desc {
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    /* ─── DEMO STAGE ─── */
+    .demo-stage {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      min-height: 120px;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 2rem 1.5rem;
+      position: relative;
+    }
+
+    /* ════════════════════════════════════════
+       1. DROPDOWN CLÁSICO
+    ════════════════════════════════════════ */
+    .classic-wrap {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .classic-dd {
+      position: relative;
+    }
+    .dd-trigger {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      font-family: var(--mono);
+      font-size: 12px;
+      padding: 8px 14px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: border-color .2s;
+    }
+    .dd-trigger:hover { border-color: var(--accent); }
+    .dd-trigger .arr {
+      font-size: 9px;
+      transition: transform .2s;
+      display: inline-block;
+    }
+    .classic-dd.open .arr { transform: rotate(180deg); }
+    .dd-list {
+      position: absolute;
+      top: calc(100% + 6px);
+      left: 0;
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      min-width: 140px;
+      padding: 5px;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(-6px);
+      transition: opacity .15s, transform .15s, visibility .15s;
+      z-index: 50;
+    }
+    .classic-dd.open .dd-list {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+    .dd-list button {
+      width: 100%;
+      text-align: left;
+      background: none;
+      border: none;
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 12px;
+      padding: 8px 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: color .15s, background .15s;
+    }
+    .dd-list button:hover { color: var(--text); background: var(--bg3); }
+    .dd-list button .opt { color: var(--accent); }
+
+    /* ════════════════════════════════════════
+       2. SELECT NATIVO ESTILIZADO
+    ════════════════════════════════════════ */
+    .select-wrap {
+      position: relative;
+      display: inline-block;
+    }
+    .select-wrap select {
+      appearance: none;
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      font-family: var(--mono);
+      font-size: 13px;
+      padding: 10px 36px 10px 14px;
+      cursor: pointer;
+      outline: none;
+      transition: border-color .2s;
+      min-width: 180px;
+    }
+    .select-wrap select:focus { border-color: var(--accent); }
+    .select-wrap::after {
+      content: '▾';
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--accent);
+      font-size: 12px;
+      pointer-events: none;
+    }
+    .select-wrap select option { background: var(--bg2); }
+
+    /* ════════════════════════════════════════
+       3. KEBAB / MEATBALL
+    ════════════════════════════════════════ */
+    .cards-row {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .item-card {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      width: 200px;
+      position: relative;
+    }
+    .item-card .item-dot {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--accent);
+      flex-shrink: 0;
+    }
+    .item-card .item-info { flex: 1; min-width: 0; }
+    .item-card .item-name {
+      font-size: 13px;
+      font-weight: 600;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .item-card .item-sub { font-family: var(--mono); font-size: 11px; color: var(--muted); margin-top: 2px; }
+    .kebab-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--muted);
+      font-size: 16px;
+      padding: 4px;
+      border-radius: 5px;
+      line-height: 1;
+      letter-spacing: 2px;
+      transition: color .2s, background .2s;
+    }
+    .kebab-btn:hover { color: var(--text); background: var(--bg3); }
+    .kebab-menu {
+      position: absolute;
+      top: calc(100% + 4px);
+      right: 8px;
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      min-width: 140px;
+      padding: 5px;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(-4px);
+      transition: opacity .15s, transform .15s, visibility .15s;
+      z-index: 50;
+    }
+    .item-card.open .kebab-menu {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+    .kebab-menu button {
+      width: 100%;
+      text-align: left;
+      background: none;
+      border: none;
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 12px;
+      padding: 8px 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: color .15s, background .15s;
+    }
+    .kebab-menu button:hover { color: var(--text); background: var(--bg3); }
+    .kebab-menu button .opt { color: var(--accent); }
+    .kebab-menu .divider {
+      height: 1px;
+      background: var(--border);
+      margin: 4px 0;
+    }
+
+    /* ════════════════════════════════════════
+       4. ACCORDION
+    ════════════════════════════════════════ */
+    .accordion { width: 100%; max-width: 440px; margin: 0 auto; }
+    .acc-item {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+      margin-bottom: 6px;
+    }
+    .acc-header {
+      width: 100%;
+      background: var(--bg2);
+      border: none;
+      color: var(--text);
+      font-family: var(--sans);
+      font-size: 13px;
+      font-weight: 600;
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      transition: background .15s;
+    }
+    .acc-header:hover { background: var(--bg3); }
+    .acc-header .acc-arr {
+      font-size: 11px;
+      color: var(--accent);
+      transition: transform .2s;
+    }
+    .acc-item.open .acc-arr { transform: rotate(180deg); }
+    .acc-body {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height .3s ease;
+      background: var(--bg);
+    }
+    .acc-item.open .acc-body { max-height: 200px; }
+    .acc-body-inner { padding: 4px 6px 8px; }
+    .acc-body-inner button {
+      width: 100%;
+      text-align: left;
+      background: none;
+      border: none;
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 12px;
+      padding: 8px 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: color .15s, background .15s;
+    }
+    .acc-body-inner button:hover { color: var(--text); background: var(--bg2); }
+    .acc-body-inner button .opt { color: var(--accent); }
+
+    /* ════════════════════════════════════════
+       5. CASCADE / FLY-OUT
+    ════════════════════════════════════════ */
+    .cascade-root {
+      position: relative;
+      display: inline-block;
+    }
+    .cascade-list {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      min-width: 180px;
+      padding: 5px;
+    }
+    .cascade-item {
+      position: relative;
+    }
+    .cascade-item > button {
+      width: 100%;
+      text-align: left;
+      background: none;
+      border: none;
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 12px;
+      padding: 8px 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: color .15s, background .15s;
+    }
+    .cascade-item > button:hover,
+    .cascade-item.open > button { color: var(--text); background: var(--bg3); }
+    .cascade-item > button .opt { color: var(--accent); }
+    .cascade-item > button .sub-arr { font-size: 10px; color: var(--muted); }
+    .cascade-sub {
+      position: absolute;
+      top: 0;
+      left: calc(100% + 6px);
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      min-width: 160px;
+      padding: 5px;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateX(-6px);
+      transition: opacity .15s, transform .15s, visibility .15s;
+      z-index: 10;
+    }
+    .cascade-item.open .cascade-sub {
+      opacity: 1;
+      visibility: visible;
+      transform: translateX(0);
+    }
+    .cascade-sub button {
+      width: 100%;
+      text-align: left;
+      background: none;
+      border: none;
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 12px;
+      padding: 8px 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: color .15s, background .15s;
+    }
+    .cascade-sub button:hover { color: var(--text); background: var(--bg3); }
+    .cascade-sub button .opt { color: var(--accent3); }
+
+    /* ════════════════════════════════════════
+       6. CONTEXT MENU (right click)
+    ════════════════════════════════════════ */
+    .context-zone {
+      width: 100%;
+      max-width: 400px;
+      height: 100px;
+      background: var(--bg3);
+      border: 1px dashed var(--border2);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--muted);
+      user-select: none;
+      cursor: context-menu;
+    }
+    .ctx-menu {
+      position: fixed;
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      min-width: 160px;
+      padding: 5px;
+      z-index: 500;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity .1s, visibility .1s;
+    }
+    .ctx-menu.visible { opacity: 1; visibility: visible; }
+    .ctx-menu button {
+      width: 100%;
+      text-align: left;
+      background: none;
+      border: none;
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 12px;
+      padding: 8px 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: color .15s, background .15s;
+    }
+    .ctx-menu button:hover { color: var(--text); background: var(--bg3); }
+    .ctx-menu button .opt { color: var(--accent2); }
+    .ctx-menu .ctx-div { height: 1px; background: var(--border); margin: 4px 0; }
+
+    /* ════════════════════════════════════════
+       7. BENTO MENU
+    ════════════════════════════════════════ */
+    .bento-wrap { position: relative; display: inline-block; }
+    .bento-trigger {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      font-size: 18px;
+      width: 40px;
+      height: 40px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: border-color .2s;
+      line-height: 1;
+    }
+    .bento-trigger:hover { border-color: var(--accent); }
+    .bento-grid {
+      position: absolute;
+      top: calc(100% + 8px);
+      left: 0;
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px;
+      display: grid;
+      grid-template-columns: repeat(3, 72px);
+      gap: 8px;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(-6px) scale(.97);
+      transition: opacity .18s, transform .18s, visibility .18s;
+      z-index: 100;
+    }
+    .bento-wrap.open .bento-grid {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0) scale(1);
+    }
+    .bento-cell {
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      height: 64px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      cursor: pointer;
+      transition: border-color .15s, background .15s;
+    }
+    .bento-cell:hover { border-color: var(--accent); background: rgba(162,89,255,.08); }
+    .bento-cell .bc-icon { font-size: 18px; }
+    .bento-cell .bc-label { font-family: var(--mono); font-size: 10px; color: var(--muted); }
+
+    /* ════════════════════════════════════════
+       8. FAB SPEED DIAL
+    ════════════════════════════════════════ */
+    .fab-demo {
+      position: relative;
+      height: 220px;
+      width: 100%;
+      display: flex;
+      align-items: flex-end;
+      justify-content: flex-end;
+      padding: 1rem;
+    }
+    .fab-stack {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      position: relative;
+    }
+    .fab-option {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      opacity: 0;
+      transform: translateY(10px) scale(.9);
+      transition: opacity .2s, transform .2s;
+      pointer-events: none;
+    }
+    .fab-stack.open .fab-option {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+      pointer-events: all;
+    }
+    .fab-stack.open .fab-option:nth-child(1) { transition-delay: .05s; }
+    .fab-stack.open .fab-option:nth-child(2) { transition-delay: .1s; }
+    .fab-stack.open .fab-option:nth-child(3) { transition-delay: .15s; }
+    .fab-stack.open .fab-option:nth-child(4) { transition-delay: .2s; }
+    .fab-label {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--text);
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      padding: 4px 8px;
+      border-radius: 6px;
+      white-space: nowrap;
+    }
+    .fab-mini {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--accent);
+      cursor: pointer;
+      transition: background .2s, border-color .2s;
+    }
+    .fab-mini:hover { background: var(--bg3); border-color: var(--accent); }
+    .fab-main {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      background: var(--accent);
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      color: #fff;
+      cursor: pointer;
+      transition: transform .2s, background .2s;
+      box-shadow: 0 4px 20px rgba(162,89,255,.4);
+      flex-shrink: 0;
+    }
+    .fab-main:hover { background: #b86bff; transform: scale(1.05); }
+    .fab-stack.open .fab-main { transform: rotate(45deg); }
+    .fab-stack.open .fab-main:hover { transform: rotate(45deg) scale(1.05); }
+
+    /* ════════════════════════════════════════
+       9. DISCLOSURE / POPOVER
+    ════════════════════════════════════════ */
+    .popover-wrap { position: relative; display: inline-block; }
+    .popover-trigger {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      font-family: var(--mono);
+      font-size: 12px;
+      padding: 8px 14px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: border-color .2s;
+    }
+    .popover-trigger:hover { border-color: var(--accent); }
+    .popover-panel {
+      position: absolute;
+      top: calc(100% + 8px);
+      left: 50%;
+      transform: translateX(-50%) translateY(-6px);
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      width: 220px;
+      padding: 14px;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity .18s, transform .18s, visibility .18s;
+      z-index: 100;
+    }
+    .popover-wrap.open .popover-panel {
+      opacity: 1;
+      visibility: visible;
+      transform: translateX(-50%) translateY(0);
+    }
+    .popover-panel::before {
+      content: '';
+      position: absolute;
+      top: -5px;
+      left: 50%;
+      transform: translateX(-50%) rotate(45deg);
+      width: 8px;
+      height: 8px;
+      background: var(--bg2);
+      border-left: 1px solid var(--border);
+      border-top: 1px solid var(--border);
+    }
+    .pop-title {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--accent);
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+    .pop-option {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 0;
+      border-bottom: 1px solid var(--border);
+      cursor: pointer;
+      transition: color .15s;
+    }
+    .pop-option:last-child { border-bottom: none; }
+    .pop-option:hover { color: var(--accent); }
+    .pop-option .po-num { font-family: var(--mono); font-size: 11px; color: var(--accent); width: 20px; }
+    .pop-option .po-label { font-family: var(--mono); font-size: 12px; }
+
+    /* TOAST NOTIFICATION */
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(80px);
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 10px 18px;
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--text);
+      z-index: 9998;
+      transition: transform .3s cubic-bezier(.4,0,.2,1);
+      white-space: nowrap;
+    }
+    .toast.show { transform: translateX(-50%) translateY(0); }
+    .toast span { color: var(--accent); }
+  </style>
+</head>
+<body>
+
+  <!-- ══════════════════════════════════════
+       TOP NAVBAR (hamburger + dropdowns)
+  ══════════════════════════════════════ -->
+  <nav class="topnav">
+    <button class="hamburger-btn" id="hamburgerBtn" aria-label="Abrir menú">
+      <span></span><span></span><span></span>
+    </button>
+
+    <div class="logo">menu<span>.</span>catalog</div>
+
+    <!-- Dropdown clásico en navbar -->
+    <div class="nav-item" id="navDd1">
+      <button class="nav-btn" onclick="toggleNav('navDd1')">
+        Nav Dropdown <span class="chevron">▾</span>
+      </button>
+      <div class="nav-dropdown">
+        <a href="#" onclick="picked('00');return false;"><span class="opt-num">00</span> Opción 00</a>
+        <a href="#" onclick="picked('01');return false;"><span class="opt-num">01</span> Opción 01</a>
+        <a href="#" onclick="picked('02');return false;"><span class="opt-num">02</span> Opción 02</a>
+        <a href="#" onclick="picked('03');return false;"><span class="opt-num">03</span> Opción 03</a>
+      </div>
+    </div>
+
+    <!-- Mega menú en navbar -->
+    <div class="nav-item" id="navMega">
+      <button class="nav-btn" onclick="toggleNav('navMega')">
+        Mega Menú <span class="chevron">▾</span>
+      </button>
+      <div class="mega-dropdown">
+        <div class="mega-col-title">Selecciona una sección</div>
+        <div class="mega-item" onclick="picked('00')">
+          <div class="mi-num">00</div>
+          <div class="mi-label">Sección 00</div>
+          <div class="mi-sub">descripción breve</div>
+        </div>
+        <div class="mega-item" onclick="picked('01')">
+          <div class="mi-num">01</div>
+          <div class="mi-label">Sección 01</div>
+          <div class="mi-sub">descripción breve</div>
+        </div>
+        <div class="mega-item" onclick="picked('02')">
+          <div class="mi-num">02</div>
+          <div class="mi-label">Sección 02</div>
+          <div class="mi-sub">descripción breve</div>
+        </div>
+        <div class="mega-item" onclick="picked('03')">
+          <div class="mi-num">03</div>
+          <div class="mi-label">Sección 03</div>
+          <div class="mi-sub">descripción breve</div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- DRAWER -->
+  <div class="drawer-overlay" id="drawerOverlay" onclick="closeDrawer()"></div>
+  <div class="drawer" id="drawer">
+    <div class="drawer-title">// panel lateral</div>
+    <a href="#" onclick="picked('00');closeDrawer();return false;"><span class="dn">00</span>Opción 00</a>
+    <a href="#" onclick="picked('01');closeDrawer();return false;"><span class="dn">01</span>Opción 01</a>
+    <a href="#" onclick="picked('02');closeDrawer();return false;"><span class="dn">02</span>Opción 02</a>
+    <a href="#" onclick="picked('03');closeDrawer();return false;"><span class="dn">03</span>Opción 03</a>
+  </div>
+
+  <!-- CONTEXT MENU GLOBAL -->
+  <div class="ctx-menu" id="ctxMenu">
+    <button onclick="picked('00')"><span class="opt">00</span>Opción 00</button>
+    <button onclick="picked('01')"><span class="opt">01</span>Opción 01</button>
+    <div class="ctx-div"></div>
+    <button onclick="picked('02')"><span class="opt">02</span>Opción 02</button>
+    <button onclick="picked('03')"><span class="opt">03</span>Opción 03</button>
+  </div>
+
+  <!-- TOAST -->
+  <div class="toast" id="toast">Seleccionaste: <span id="toastTxt">—</span></div>
+
+  <!-- ══════════════════════════════════════
+       HERO
+  ══════════════════════════════════════ -->
+  <section class="hero">
+    <div class="hero-label">// referencia interactiva</div>
+    <h1>Tipos de menús<br><span>desplegables</span></h1>
+    <p>Explora los 9 patrones de menú más comunes en apps web. Cada opción muestra 00–03 y no lleva a ningún lado.</p>
+  </section>
+
+  <!-- ══════════════════════════════════════
+       CATALOG
+  ══════════════════════════════════════ -->
+  <main class="catalog">
+
+    <!-- 01 · Hamburguesa + Drawer -->
+    <div class="section-card">
+      <div class="section-header">
+        <span class="section-num">01</span>
+        <span class="section-title">Hamburguesa + Drawer</span>
+        <span class="section-tag">☰ · panel lateral</span>
+      </div>
+      <div class="section-body">
+        <p class="section-desc">El ícono ☰ en la navbar superior activa un panel que se desliza desde el borde izquierdo. Estándar en móvil y dashboards.</p>
+        <div class="demo-stage" style="justify-content:center; align-items:center; flex-direction:column; gap:12px;">
+          <p style="font-family:var(--mono);font-size:12px;color:var(--muted);">↑ Usa el botón ☰ en la barra superior de la página</p>
+          <button class="hamburger-btn" id="hamburgerBtn2" onclick="openDrawer()">
+            <span></span><span></span><span></span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 02 · Dropdown clásico -->
+    <div class="section-card">
+      <div class="section-header">
+        <span class="section-num">02</span>
+        <span class="section-title">Dropdown clásico</span>
+        <span class="section-tag">▾ · lista desplegable</span>
+      </div>
+      <div class="section-body">
+        <p class="section-desc">Un botón que al hacer clic despliega una lista de opciones hacia abajo. El patrón más universal en navegación y formularios.</p>
+        <div class="demo-stage" style="justify-content:center;gap:16px;flex-wrap:wrap;align-items:flex-start;padding-top:2rem;min-height:160px;">
+          <div class="classic-dd" id="dd_a">
+            <button class="dd-trigger" onclick="toggleDd('dd_a')">
+              Menú A <span class="arr">▾</span>
+            </button>
+            <div class="dd-list">
+              <button onclick="picked('00')"><span class="opt">00 </span>Opción 00</button>
+              <button onclick="picked('01')"><span class="opt">01 </span>Opción 01</button>
+              <button onclick="picked('02')"><span class="opt">02 </span>Opción 02</button>
+              <button onclick="picked('03')"><span class="opt">03 </span>Opción 03</button>
+            </div>
+          </div>
+          <div class="classic-dd" id="dd_b">
+            <button class="dd-trigger" onclick="toggleDd('dd_b')">
+              Menú B <span class="arr">▾</span>
+            </button>
+            <div class="dd-list">
+              <button onclick="picked('00')"><span class="opt">00 </span>Opción 00</button>
+              <button onclick="picked('01')"><span class="opt">01 </span>Opción 01</button>
+              <button onclick="picked('02')"><span class="opt">02 </span>Opción 02</button>
+              <button onclick="picked('03')"><span class="opt">03 </span>Opción 03</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 03 · Select nativo -->
+    <div class="section-card">
+      <div class="section-header">
+        <span class="section-num">03</span>
+        <span class="section-title">Select nativo estilizado</span>
+        <span class="section-tag">▾ · formulario</span>
+      </div>
+      <div class="section-body">
+        <p class="section-desc">El elemento <code style="font-family:var(--mono);color:var(--accent);font-size:12px;">&lt;select&gt;</code> del navegador con estilos personalizados. Ideal para formularios — el menú lo maneja el sistema operativo.</p>
+        <div class="demo-stage" style="justify-content:center;align-items:center;gap:16px;flex-wrap:wrap;">
+          <div class="select-wrap">
+            <select onchange="picked(this.value);this.value=''">
+              <option value="" disabled selected>Elige una opción</option>
+              <option value="00">00 — Opción 00</option>
+              <option value="01">01 — Opción 01</option>
+              <option value="02">02 — Opción 02</option>
+              <option value="03">03 — Opción 03</option>
+            </select>
+          </div>
+          <div class="select-wrap">
+            <select onchange="picked(this.value);this.value=''">
+              <option value="" disabled selected>Multi-select demo</option>
+              <option value="00">00 — Opción 00</option>
+              <option value="01">01 — Opción 01</option>
+              <option value="02">02 — Opción 02</option>
+              <option value="03">03 — Opción 03</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 04 · Kebab / Meatball -->
+    <div class="section-card">
+      <div class="section-header">
+        <span class="section-num">04</span>
+        <span class="section-title">Kebab ⋮ / Meatball ···</span>
+        <span class="section-tag">acciones contextuales</span>
+      </div>
+      <div class="section-body">
+        <p class="section-desc">Tres puntos (verticales = kebab, horizontales = meatball) en una tarjeta o fila de lista que abren un menú de acciones para ese ítem específico.</p>
+        <div class="demo-stage" style="justify-content:center;align-items:flex-start;padding-top:1.5rem;flex-wrap:wrap;gap:12px;min-height:160px;">
+          <div class="cards-row">
+            <div class="item-card" id="kcard_0">
+              <div class="item-dot">00</div>
+              <div class="item-info">
+                <div class="item-name">Elemento 00</div>
+                <div class="item-sub">subtítulo</div>
+              </div>
+              <button class="kebab-btn" onclick="toggleKebab('kcard_0')">⋮</button>
+              <div class="kebab-menu">
+                <button onclick="picked('00')"><span class="opt">00</span>Opción 00</button>
+                <button onclick="picked('01')"><span class="opt">01</span>Opción 01</button>
+                <div class="divider"></div>
+                <button onclick="picked('02')"><span class="opt">02</span>Opción 02</button>
+                <button onclick="picked('03')"><span class="opt">03</span>Opción 03</button>
+              </div>
+            </div>
+            <div class="item-card" id="kcard_1">
+              <div class="item-dot">01</div>
+              <div class="item-info">
+                <div class="item-name">Elemento 01</div>
+                <div class="item-sub">subtítulo</div>
+              </div>
+              <button class="kebab-btn" onclick="toggleKebab('kcard_1')">⋮</button>
+              <div class="kebab-menu">
+                <button onclick="picked('00')"><span class="opt">00</span>Opción 00</button>
+                <button onclick="picked('01')"><span class="opt">01</span>Opción 01</button>
+                <div class="divider"></div>
+                <button onclick="picked('02')"><span class="opt">02</span>Opción 02</button>
+                <button onclick="picked('03')"><span class="opt">03</span>Opción 03</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 05 · Accordion -->
+    <div class="section-card">
+      <div class="section-header">
+        <span class="section-num">05</span>
+        <span class="section-title">Accordion / expandible</span>
+        <span class="section-tag">▾ · sidebar / FAQ</span>
+      </div>
+      <div class="section-body">
+        <p class="section-desc">Secciones que se expanden y contraen al hacer clic. Ideal para sidebars de navegación con subcategorías o áreas de contenido colapsable.</p>
+        <div class="demo-stage" style="justify-content:center;align-items:flex-start;">
+          <div class="accordion">
+            <div class="acc-item" id="acc_0">
+              <button class="acc-header" onclick="toggleAcc('acc_0')">
+                Grupo 00 <span class="acc-arr">▾</span>
+              </button>
+              <div class="acc-body">
+                <div class="acc-body-inner">
+                  <button onclick="picked('00')"><span class="opt">00 </span>Opción 00</button>
+                  <button onclick="picked('01')"><span class="opt">01 </span>Opción 01</button>
+                  <button onclick="picked('02')"><span class="opt">02 </span>Opción 02</button>
+                  <button onclick="picked('03')"><span class="opt">03 </span>Opción 03</button>
+                </div>
+              </div>
+            </div>
+            <div class="acc-item" id="acc_1">
+              <button class="acc-header" onclick="toggleAcc('acc_1')">
+                Grupo 01 <span class="acc-arr">▾</span>
+              </button>
+              <div class="acc-body">
+                <div class="acc-body-inner">
+                  <button onclick="picked('00')"><span class="opt">00 </span>Opción 00</button>
+                  <button onclick="picked('01')"><span class="opt">01 </span>Opción 01</button>
+                  <button onclick="picked('02')"><span class="opt">02 </span>Opción 02</button>
+                  <button onclick="picked('03')"><span class="opt">03 </span>Opción 03</button>
+                </div>
+              </div>
+            </div>
+            <div class="acc-item" id="acc_2">
+              <button class="acc-header" onclick="toggleAcc('acc_2')">
+                Grupo 02 <span class="acc-arr">▾</span>
+              </button>
+              <div class="acc-body">
+                <div class="acc-body-inner">
+                  <button onclick="picked('00')"><span class="opt">00 </span>Opción 00</button>
+                  <button onclick="picked('01')"><span class="opt">01 </span>Opción 01</button>
+                  <button onclick="picked('02')"><span class="opt">02 </span>Opción 02</button>
+                  <button onclick="picked('03')"><span class="opt">03 </span>Opción 03</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 06 · Cascade / fly-out -->
+    <div class="section-card">
+      <div class="section-header">
+        <span class="section-num">06</span>
+        <span class="section-title">Menú en cascada (fly-out)</span>
+        <span class="section-tag">▶ · submenús anidados</span>
+      </div>
+      <div class="section-body">
+        <p class="section-desc">Submenús que se despliegan lateralmente al hacer hover o clic en un ítem padre. Permite jerarquías profundas sin ocupar espacio vertical.</p>
+        <div class="demo-stage" style="justify-content:center;align-items:flex-start;min-height:200px;padding-top:1.5rem;">
+          <div class="cascade-root">
+            <div class="cascade-list">
+              <div class="cascade-item" id="cas_0">
+                <button onclick="toggleCascade('cas_0')">
+                  <span><span class="opt" style="color:var(--accent);margin-right:6px">00</span>Opción 00</span>
+                  <span class="sub-arr">▶</span>
+                </button>
+                <div class="cascade-sub">
+                  <button onclick="picked('00')"><span class="opt">00</span> Sub 00</button>
+                  <button onclick="picked('01')"><span class="opt">01</span> Sub 01</button>
+                  <button onclick="picked('02')"><span class="opt">02</span> Sub 02</button>
+                  <button onclick="picked('03')"><span class="opt">03</span> Sub 03</button>
+                </div>
+              </div>
+              <div class="cascade-item" id="cas_1">
+                <button onclick="toggleCascade('cas_1')">
+                  <span><span class="opt" style="color:var(--accent);margin-right:6px">01</span>Opción 01</span>
+                  <span class="sub-arr">▶</span>
+                </button>
+                <div class="cascade-sub">
+                  <button onclick="picked('00')"><span class="opt">00</span> Sub 00</button>
+                  <button onclick="picked('01')"><span class="opt">01</span> Sub 01</button>
+                  <button onclick="picked('02')"><span class="opt">02</span> Sub 02</button>
+                  <button onclick="picked('03')"><span class="opt">03</span> Sub 03</button>
+                </div>
+              </div>
+              <div class="cascade-item" id="cas_2">
+                <button onclick="toggleCascade('cas_2')">
+                  <span><span class="opt" style="color:var(--accent);margin-right:6px">02</span>Opción 02</span>
+                  <span class="sub-arr">▶</span>
+                </button>
+                <div class="cascade-sub">
+                  <button onclick="picked('00')"><span class="opt">00</span> Sub 00</button>
+                  <button onclick="picked('01')"><span class="opt">01</span> Sub 01</button>
+                  <button onclick="picked('02')"><span class="opt">02</span> Sub 02</button>
+                  <button onclick="picked('03')"><span class="opt">03</span> Sub 03</button>
+                </div>
+              </div>
+              <div class="cascade-item" id="cas_3">
+                <button onclick="toggleCascade('cas_3')">
+                  <span><span class="opt" style="color:var(--accent);margin-right:6px">03</span>Opción 03</span>
+                  <span class="sub-arr">▶</span>
+                </button>
+                <div class="cascade-sub">
+                  <button onclick="picked('00')"><span class="opt">00</span> Sub 00</button>
+                  <button onclick="picked('01')"><span class="opt">01</span> Sub 01</button>
+                  <button onclick="picked('02')"><span class="opt">02</span> Sub 02</button>
+                  <button onclick="picked('03')"><span class="opt">03</span> Sub 03</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 07 · Context menu -->
+    <div class="section-card">
+      <div class="section-header">
+        <span class="section-num">07</span>
+        <span class="section-title">Menú contextual</span>
+        <span class="section-tag">clic derecho</span>
+      </div>
+      <div class="section-body">
+        <p class="section-desc">Aparece al hacer clic derecho en una zona específica. Reemplaza o extiende el menú contextual del navegador con acciones propias de la app.</p>
+        <div class="demo-stage" style="justify-content:center;align-items:center;">
+          <div class="context-zone" id="ctxZone">
+            clic derecho aquí →
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 08 · Bento -->
+    <div class="section-card">
+      <div class="section-header">
+        <span class="section-num">08</span>
+        <span class="section-title">Bento menu</span>
+        <span class="section-tag">⠿ · cuadrícula de apps</span>
+      </div>
+      <div class="section-body">
+        <p class="section-desc">Cuadrícula de íconos/módulos, popularizada por Google y Microsoft 365. Cada celda representa una app o sección del producto.</p>
+        <div class="demo-stage" style="justify-content:center;align-items:flex-start;min-height:180px;padding-top:1.5rem;">
+          <div class="bento-wrap" id="bentoWrap">
+            <button class="bento-trigger" onclick="toggleBento()">⠿</button>
+            <div class="bento-grid">
+              <div class="bento-cell" onclick="picked('00')">
+                <span class="bc-icon">🗂</span>
+                <span class="bc-label">00</span>
+              </div>
+              <div class="bento-cell" onclick="picked('01')">
+                <span class="bc-icon">📊</span>
+                <span class="bc-label">01</span>
+              </div>
+              <div class="bento-cell" onclick="picked('02')">
+                <span class="bc-icon">💬</span>
+                <span class="bc-label">02</span>
+              </div>
+              <div class="bento-cell" onclick="picked('03')">
+                <span class="bc-icon">🔔</span>
+                <span class="bc-label">03</span>
+              </div>
+              <div class="bento-cell" onclick="picked('00')">
+                <span class="bc-icon">🛠</span>
+                <span class="bc-label">00</span>
+              </div>
+              <div class="bento-cell" onclick="picked('01')">
+                <span class="bc-icon">📁</span>
+                <span class="bc-label">01</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 09 · FAB Speed Dial -->
+    <div class="section-card">
+      <div class="section-header">
+        <span class="section-num">09</span>
+        <span class="section-title">FAB + Speed Dial</span>
+        <span class="section-tag">+ · botón flotante</span>
+      </div>
+      <div class="section-body">
+        <p class="section-desc">Un Floating Action Button que al presionarse expande opciones secundarias en abanico o lista. Patrón Material Design, común en apps móviles.</p>
+        <div class="demo-stage" style="padding:0;overflow:hidden;">
+          <div class="fab-demo">
+            <div class="fab-stack" id="fabStack">
+              <div class="fab-option">
+                <span class="fab-label">Opción 03</span>
+                <button class="fab-mini" onclick="picked('03')">03</button>
+              </div>
+              <div class="fab-option">
+                <span class="fab-label">Opción 02</span>
+                <button class="fab-mini" onclick="picked('02')">02</button>
+              </div>
+              <div class="fab-option">
+                <span class="fab-label">Opción 01</span>
+                <button class="fab-mini" onclick="picked('01')">01</button>
+              </div>
+              <div class="fab-option">
+                <span class="fab-label">Opción 00</span>
+                <button class="fab-mini" onclick="picked('00')">00</button>
+              </div>
+              <button class="fab-main" onclick="toggleFab()">+</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 10 · Popover disclosure -->
+    <div class="section-card">
+      <div class="section-header">
+        <span class="section-num">10</span>
+        <span class="section-title">Popover / Disclosure</span>
+        <span class="section-tag">↑ · panel flotante</span>
+      </div>
+      <div class="section-body">
+        <p class="section-desc">Panel flotante anclado a un trigger con una flecha indicadora. Ideal para filtros, configuración rápida o listas de opciones con contexto visual.</p>
+        <div class="demo-stage" style="justify-content:center;align-items:flex-start;padding-top:2rem;min-height:220px;">
+          <div class="popover-wrap" id="popoverWrap">
+            <button class="popover-trigger" onclick="togglePopover()">
+              ⚙ Configuración <span style="font-size:10px;color:var(--accent)">▾</span>
+            </button>
+            <div class="popover-panel">
+              <div class="pop-title">// opciones</div>
+              <div class="pop-option" onclick="picked('00')">
+                <span class="po-num">00</span>
+                <span class="po-label">Opción 00</span>
+              </div>
+              <div class="pop-option" onclick="picked('01')">
+                <span class="po-num">01</span>
+                <span class="po-label">Opción 01</span>
+              </div>
+              <div class="pop-option" onclick="picked('02')">
+                <span class="po-num">02</span>
+                <span class="po-label">Opción 02</span>
+              </div>
+              <div class="pop-option" onclick="picked('03')">
+                <span class="po-num">03</span>
+                <span class="po-label">Opción 03</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <script>
+    /* ─── TOAST ─── */
+    let toastTimer;
+    function picked(opt) {
+      const t = document.getElementById('toast');
+      const txt = document.getElementById('toastTxt');
+      txt.textContent = 'Opción ' + opt;
+      t.classList.add('show');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => t.classList.remove('show'), 2200);
+      closeAll();
+    }
+
+    /* ─── CLOSE ALL ─── */
+    function closeAll() {
+      document.querySelectorAll('.nav-item.open, .classic-dd.open, .item-card.open, .acc-item.open, .cascade-item.open').forEach(el => {
+        if (!el.classList.contains('acc-item')) el.classList.remove('open');
+      });
+      document.getElementById('ctxMenu').classList.remove('visible');
+      document.getElementById('bentoWrap').classList.remove('open');
+      document.getElementById('popoverWrap').classList.remove('open');
+    }
+
+    document.addEventListener('click', function(e) {
+      if (!e.target.closest('.nav-item')) {
+        document.querySelectorAll('.nav-item.open').forEach(el => el.classList.remove('open'));
+      }
+      if (!e.target.closest('.classic-dd')) {
+        document.querySelectorAll('.classic-dd.open').forEach(el => el.classList.remove('open'));
+      }
+      if (!e.target.closest('.item-card')) {
+        document.querySelectorAll('.item-card.open').forEach(el => el.classList.remove('open'));
+      }
+      if (!e.target.closest('.cascade-root')) {
+        document.querySelectorAll('.cascade-item.open').forEach(el => el.classList.remove('open'));
+      }
+      if (!e.target.closest('.ctx-menu')) {
+        document.getElementById('ctxMenu').classList.remove('visible');
+      }
+      if (!e.target.closest('.bento-wrap')) {
+        document.getElementById('bentoWrap').classList.remove('open');
+      }
+      if (!e.target.closest('.popover-wrap')) {
+        document.getElementById('popoverWrap').classList.remove('open');
+      }
+    });
+
+    /* ─── HAMBURGER + DRAWER ─── */
+    function openDrawer() {
+      document.getElementById('drawer').classList.add('open');
+      document.getElementById('drawerOverlay').classList.add('open');
+      document.getElementById('hamburgerBtn').classList.add('active');
+    }
+    function closeDrawer() {
+      document.getElementById('drawer').classList.remove('open');
+      document.getElementById('drawerOverlay').classList.remove('open');
+      document.getElementById('hamburgerBtn').classList.remove('active');
+    }
+    document.getElementById('hamburgerBtn').addEventListener('click', function() {
+      const isOpen = document.getElementById('drawer').classList.contains('open');
+      isOpen ? closeDrawer() : openDrawer();
+    });
+
+    /* ─── NAV DROPDOWNS ─── */
+    function toggleNav(id) {
+      const el = document.getElementById(id);
+      const wasOpen = el.classList.contains('open');
+      document.querySelectorAll('.nav-item.open').forEach(e => e.classList.remove('open'));
+      if (!wasOpen) el.classList.add('open');
+    }
+
+    /* ─── CLASSIC DROPDOWN ─── */
+    function toggleDd(id) {
+      const el = document.getElementById(id);
+      const wasOpen = el.classList.contains('open');
+      document.querySelectorAll('.classic-dd.open').forEach(e => e.classList.remove('open'));
+      if (!wasOpen) el.classList.add('open');
+    }
+
+    /* ─── KEBAB ─── */
+    function toggleKebab(id) {
+      const el = document.getElementById(id);
+      const wasOpen = el.classList.contains('open');
+      document.querySelectorAll('.item-card.open').forEach(e => e.classList.remove('open'));
+      if (!wasOpen) el.classList.add('open');
+    }
+
+    /* ─── ACCORDION ─── */
+    function toggleAcc(id) {
+      const el = document.getElementById(id);
+      el.classList.toggle('open');
+    }
+
+    /* ─── CASCADE ─── */
+    function toggleCascade(id) {
+      const el = document.getElementById(id);
+      const wasOpen = el.classList.contains('open');
+      document.querySelectorAll('.cascade-item.open').forEach(e => e.classList.remove('open'));
+      if (!wasOpen) el.classList.add('open');
+    }
+
+    /* ─── CONTEXT MENU ─── */
+    const ctxZone = document.getElementById('ctxZone');
+    const ctxMenu = document.getElementById('ctxMenu');
+    ctxZone.addEventListener('contextmenu', function(e) {
+      e.preventDefault();
+      ctxMenu.style.left = e.clientX + 'px';
+      ctxMenu.style.top = e.clientY + 'px';
+      ctxMenu.classList.add('visible');
+    });
+
+    /* ─── BENTO ─── */
+    function toggleBento() {
+      document.getElementById('bentoWrap').classList.toggle('open');
+    }
+
+    /* ─── FAB ─── */
+    function toggleFab() {
+      document.getElementById('fabStack').classList.toggle('open');
+    }
+
+    /* ─── POPOVER ─── */
+    function togglePopover() {
+      document.getElementById('popoverWrap').classList.toggle('open');
+    }
+  </script>
+</body>
+</html>
