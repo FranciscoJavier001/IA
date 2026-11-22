@@ -1,0 +1,3 @@
+Contador, pero podria hacerlo que fuera cada uno editable en evolme, osea, que salga un boton abajo que diga editar, y que salga cada uno de los numeros, y que sea una pantalla nueva, donde puedo editar los numeros.
+
+En la app de evolme llevo 10 cumplidos, 5 fallados, 1 saltado, total 16, pero en el recuadro le pongo editar y se mueven esos numeros, pero ahora quedan subrayados, y que ahi salgan los numeros reales de las veces que se ha presionado en ese, que solo se quiten cuando precionas, pero que ahi se mantenga el contador real, y que al final de esos salga el numero de aplicar, asi me ahorro la base de datos y todo se queda en local.
